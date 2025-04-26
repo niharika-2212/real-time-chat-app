@@ -1,5 +1,6 @@
 import admin from "firebase-admin";
-import serviceAccount from "./firebaseAdmin.json" assert { type: "json" };
+import serviceAccount from "./firebaseAdmin.json" with { type: "json" };
+
 
 // initialise firebase admin SDK with credentials from json file above
 admin.initializeApp({
