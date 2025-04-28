@@ -25,6 +25,6 @@ const messageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 // create user model with that schema
-const Message = mongoose.model("Messgage", messageSchema);
+const Message = mongoose.model("Message", messageSchema);
 // export this model
 export default Message;

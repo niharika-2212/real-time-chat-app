@@ -28,8 +28,12 @@ router.get("/:senderId/:receiverId", async (req, res) => {
   try {
     // get all messages between two users
     const messages = await Message.find({
-      userId: { $in: [senderId, receiverId] }
-    }).sort({ timestamp: 1 }); 
+      $or: [
+        { senderId: senderId, receiverId: receiverId },
+        { senderId: receiverId, receiverId: senderId }
+      ]
+    }).sort({ createdAt: 1 });
+
     res.status(200).json({ messages });
   } catch (error) {
     res.status(500).json({ message: error.message });
