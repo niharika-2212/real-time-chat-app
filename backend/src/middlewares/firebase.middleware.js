@@ -1,19 +1,25 @@
 import admin from "../lib/firebase.js";
-// we need to verify token and proceeed with user info ahead
-export const verifyToken = async (req, res, next) => {
-  // get the token from frontend
-  const token = req.headers.authorization?.split(" ")[1];
-  // if no token then user is not authorised
-  if (!token) {
-    return res.status(401).json({ message: "No token" });
+
+const verifyToken = async (req, res, next) => {
+  // get header from request
+  const authHeader = req.headers.authorization;
+  // check if header is present and starts with Bearer 
+  // if not return 401 Unauthorized
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized - No token provided" });
   }
-  // if token present decode the user from that token
+  // if yes get token from header
+  const token = authHeader.split(" ")[1];
+  console.log("Token:", token);
+  // verify token using firebase admin SDK
   try {
-    const decoded = await admin.auth().verifyIdToken(token);
-    // if token is valid then we can proceed saving user info and forwarding it
-    req.user=decoded;
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = decodedToken; // You can access user info in next middleware
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+    console.error("Error verifying token:", error);
+    return res.status(403).json({ message: "Forbidden - Invalid token" });
   }
-}
+};
+
+export default verifyToken;

@@ -17,16 +17,3 @@ export const signup = async (req, res) => {
   }
   res.status(200).json({ message: "User saved", user });
 }
-
-export const login = (req, res) => {
-  const {email} = req.body;
-  // check if user already exists
-  const user = User.findOne({email});
-  if (!user) return res.status(404).json({ message: "User not found" });
-  res.status(200).json({ message: "Login success", user });
-}
-
-
-export const logout = (req, res) => {
-  res.send("logout route");
-}

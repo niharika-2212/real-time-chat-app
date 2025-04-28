@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from './pages/signup/Signup';
 import Login from './pages/login/Login';
 import Home from './pages/home/Home';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
 
@@ -12,7 +13,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home/>} />
+          <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
         </Routes>

@@ -4,6 +4,7 @@ import { auth } from '../../firebaseConfig.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../../context/UserContext.jsx";
+import axios from 'axios';
 
 function Login(){
   const [email, setEmail] = useState('');
@@ -18,24 +19,22 @@ function Login(){
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       // console.log("Login successful:", userCredential.user);
       const user = userCredential.user;
-      // fetch user data from backend
-      const response = await fetch(`http://localhost:5000/api/user/${user.uid}`);
-      // if no response throw error
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to fetch user details');
-        throw new Error(errorData.message || 'Failed to fetch user details');
-      }
-      // if response is ok then parse the data
-      const userData = await response.json();
+      // // fetch user data from backend
+      // const response = await axios.get(`http://localhost:5000/api/user/${user.uid}`, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+      const response = await axios.get(`http://localhost:5000/api/user/${user.uid}`);
 
-      setUser(userData); 
-      console.log("Login successful. User data fetched", userData);
+      // Set user in context
+      setUser(response.data); 
+      // console.log("Login successful. User data fetched", response.data);
       navigate("/");
 
     } catch (error) {
-      console.error("Login error:", error.message);
-      setError(error.message);
+      console.error("Login error:", error.response?.data?.message || error.message);
+      setError(error.response?.data?.message || error.message);
     }
   }
   
