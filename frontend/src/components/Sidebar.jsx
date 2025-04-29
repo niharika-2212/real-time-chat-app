@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
-import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import "./component.css";
 
 function Sidebar({ onSelectUser }) {
   const { user } = useUser(); // logged in user info
   const [users, setUsers] = React.useState([]); // all users info
   const [loading, setLoading] = useState(true); // loading state
-  const navigate = useNavigate(); // for navigation
+  const [selectedUid, setSelectedUid] = useState(null);
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (!user) return; // if not logged in, don't fetch
       try {
-        // this token is used to authenticate the user
-        // if logged in fetch all users except current
-        // const response = await axios.get(`http://localhost:5000/api/user/allusers/${user.uid}`, {
-        //   headers: {
-        //     "Authorization": `Bearer ${token}`,
-        //   }
-        // });
-        const response = await axios.get(`http://localhost:5000/api/user/allusers/${user.uid}`);
+        const response = await axios.get(
+          `http://localhost:5000/api/user/allusers/${user.uid}`
+        );
         // save the data
         const data = response.data;
         setUsers(data.users);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching users:', error.message);
+        console.error("Error fetching users:", error.message);
         setLoading(false);
       }
     };
@@ -36,17 +32,32 @@ function Sidebar({ onSelectUser }) {
     return <div>Loading users...</div>;
   }
   return (
-    <div className="left-sidebar">
+    <div className="sidebar-container">
+      <div className="sidebar-heading">Users</div>
       {users.length == 0 ? (
-        <p>no users available</p>
+        <div>no users available</div>
       ) : (
         users.map((user) => {
-          return <p onClick={() => onSelectUser(user)} key={user.uid}>{user.fullname}</p>
+          return (
+            <div
+              className="user"
+              style={{
+                backgroundColor:
+                  user.uid === selectedUid ? "#FAFAFA" : "#FFFFFF",
+              }}
+              onClick={() => {
+                setSelectedUid(user.uid);
+                onSelectUser(user);
+              }}
+              key={user.uid}
+            >
+              {user.fullname}
+            </div>
+          );
         })
       )}
     </div>
-  )
-
+  );
 }
 
 export default Sidebar;

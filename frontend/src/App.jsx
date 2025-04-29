@@ -6,6 +6,8 @@ import Signup from './pages/signup/Signup';
 import Login from './pages/login/Login';
 import Home from './pages/home/Home';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -18,6 +20,7 @@ function App() {
           <Route path="/signup" element={<Signup/>} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer position="top-right" autoClose={3000} theme="light" />
     </div>
   )
 }
