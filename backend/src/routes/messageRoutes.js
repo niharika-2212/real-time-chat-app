@@ -4,13 +4,14 @@ const router=express.Router();
 
 router.post("/send",async (req, res) => {
   // get data from frontend
-  const {senderId, receiverId, text} = req.body;
+  const {senderId, receiverId, text, image} = req.body;
   try {
     // create a new message in schema
     const message = new Message({
       senderId,
       receiverId,
-      text,
+      text: text || "",
+      image: image || "",
       timestamp: new Date(),
     });
     // save message to database

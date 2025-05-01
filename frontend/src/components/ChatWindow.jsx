@@ -2,15 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import "./component.css";
 import { useUser } from "../context/UserContext.jsx";
 import axios from "axios";
-import io from "socket.io-client";
 import { toast } from "react-toastify";
-const socket = io("http://localhost:5001");
+import uploadImageToCloudinary from "./cloudinary.jsx";
+import { MdFileUpload } from "react-icons/md";
+import Messages from "./Messages.jsx";
+import socket from "../Socket.js"; // Import the socket instance
 
 function ChatWindow({ selectedUser }) {
   const { user } = useUser();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
+  const [image, setImage] = useState(null);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -67,11 +71,20 @@ function ChatWindow({ selectedUser }) {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return; // Prevent sending empty messages
+    if (!newMessage.trim() && !image) return; // Prevent sending empty messages
+
+    let imageUrl = null;
+    if (image) {
+      imageUrl = await uploadImageToCloudinary(image);
+      // console.log(imageUrl);
+      if (!imageUrl) return; // prevent sending if upload failed
+    }
+
     const messageData = {
       senderId: user._id,
       receiverId: selectedUser._id,
       text: newMessage,
+      image: imageUrl,
     };
     try {
       // socket.emit("send_message", messageData);
@@ -80,10 +93,8 @@ function ChatWindow({ selectedUser }) {
         messageData
       );
       socket.emit("send_message", response.data.message);
-      // setMessages((prevMessages) => [...prevMessages, response.data.message]);
-      // setMessages((prevMessages) => [...prevMessages, messageData]);
-      console.log(messages);
       setNewMessage("");
+      setImage(null); // Reset image after sending
     } catch (error) {
       console.error(
         "Error sending message:",
@@ -95,7 +106,7 @@ function ChatWindow({ selectedUser }) {
   if (!selectedUser) {
     return (
       <div className="chat-window">
-        <p>Select a user to start chatting</p>
+        <div className="select-user">Select a user to start chatting</div>
       </div>
     );
   }
@@ -106,21 +117,32 @@ function ChatWindow({ selectedUser }) {
       <div className="message-container">
         {messages.map((msg) => {
           return (
-            <div
-              key={msg._id}
-              className="message"
-              style={{
-                alignSelf:
-                  msg.senderId === user._id ? "flex-end" : "flex-start",
-              }}
-            >
-              {msg.text}
-            </div>
+            <Messages key={msg._id} msg={msg} selectedUser={msg.senderId === user._id} />
           );
         })}
         <div ref={messagesEndRef} />
       </div>
+      {image && (
+        <div className="image-preview">
+          <img
+            src={URL.createObjectURL(image)}
+            alt="Preview"
+          />
+          <button onClick={() => setImage(null)} className="cancel-button">X</button>
+        </div>
+      )}
       <form onSubmit={handleSendMessage} className="message-form">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+          id="imageUpload"
+          className="file-input"
+          style={{ display: "none" }}
+        />
+        <label htmlFor="imageUpload" className="upload-label">
+          <MdFileUpload className="upload-icon" />
+        </label>
         <input
           className="login-input"
           type="text"
