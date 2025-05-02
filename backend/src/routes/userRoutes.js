@@ -46,4 +46,33 @@ router.get("/allusers/:currentUserId",async (req, res) => {
   }
 });
 
+
+router.put("/update-profile-pic/:uid",async (req,res)=>{
+  const {image} = req.body;
+  const {uid} = req.params;
+  if (!image) {
+    return res.status(400).json({ message: "Image URL is required." });
+  }
+  try {
+    const user = await User.findOneAndUpdate(
+      { uid },
+      { profilepic: image },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json({
+      message: "Profile picture updated successfully.",
+      profilePic: user.profilePic,
+    });
+  } catch (err) {
+    console.error("Error updating profile picture:", err);
+    res.status(500).json({ message: "Server error." });
+  }
+});
+
+
 export default router;

@@ -9,21 +9,24 @@ function NavBar() {
   const { setUser } = useUser();
   const navigate = useNavigate();
   const handleLogout = async () => {
-      try {
-        await signOut(auth);
-        console.log("User signed out.");
-        setUser(null); // Clear user from context
-        navigate("/login"); // Redirect to login
-      } catch (error) {
-        console.error("Logout error:", error.message);
-      }
-    };
+    try {
+      await signOut(auth);
+      console.log("User signed out.");
+      setUser(null); // Clear user from context
+      navigate("/login"); // Redirect to login
+    } catch (error) {
+      console.error("Logout error:", error.message);
+    }
+  };
   return (
     <div className="navbar-container">
       <div className="navbar-heading">ChatterBox</div>
-      <button className="buttons" onClick={handleLogout}>
-        Logout
-      </button>
+      <div className="right-nav">
+        <div onClick={() =>{navigate("/profile")}}>Profile</div>
+        <button className="buttons" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
 import axios from "axios";
 import "./component.css";
+import userImage from "../assets/user.png"
 
 function Sidebar({ onSelectUser }) {
   const { user } = useUser(); // logged in user info
@@ -19,6 +20,7 @@ function Sidebar({ onSelectUser }) {
         // save the data
         const data = response.data;
         setUsers(data.users);
+        console.log("Fetched users:", data.users);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching users:", error.message);
@@ -51,8 +53,10 @@ function Sidebar({ onSelectUser }) {
               }}
               key={user.uid}
             >
+              <img src={user.profilepic || userImage}  alt="user" className="avatar-image" />
               {user.fullname}
             </div>
+            
           );
         })
       )}

@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from './pages/signup/Signup';
 import Login from './pages/login/Login';
 import Home from './pages/home/Home';
+import Profile from './pages/Profile/Profile.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
+          <Route path="/profile" element={<Profile/>} />
         </Routes>
       </BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} theme="light" />
