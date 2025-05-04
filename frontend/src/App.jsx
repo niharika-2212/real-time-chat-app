@@ -19,10 +19,9 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
-          <Route path="/profile" element={<Profile/>} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer position="top-right" autoClose={3000} theme="light" />
+      <ToastContainer position="top-right" autoClose={3000} className="notification"/>
     </div>
   )
 }

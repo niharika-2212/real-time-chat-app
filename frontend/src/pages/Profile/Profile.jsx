@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import './Profile.css';
-import NavBar from '../../components/NavBar';
+import React, { useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext.jsx';
 import UserImage from "../../assets/user.png"
 import uploadImageToCloudinary from "../../components/cloudinary.jsx";
@@ -12,7 +10,7 @@ function Profile() {
   const { user, setUser } = useUser();
   const [ image, setImage ] = useState(null);
   const [preview, setPreview] = useState("");
-  
+  const [loading, setLoading] = useState(false); // loading state
   const handleImageChange = async (e) => { 
     const file = e.target.files[0];
     setImage(file);
@@ -20,6 +18,7 @@ function Profile() {
 
   }
   const handleUpload = async () => { 
+    setLoading(true);
     if (!image) return;
     try {
       // upload image to cloudinary and get url
@@ -35,7 +34,7 @@ function Profile() {
       alert("Profile picture updated");
 
       // Update context + localStorage
-      const updatedUser = { ...user, profilePic: imageUrl };
+      const updatedUser = { ...user, profilepic: imageUrl };
       setUser(updatedUser);
       setImage(null);
       setPreview("");
@@ -43,22 +42,21 @@ function Profile() {
       console.error(err);
       alert("Error updating profile picture");
     }
+    setLoading(false);
   }
 
   if (!user) return <p>Please log in.</p>;
   return (
     <div className="profile-container">
-      <NavBar />
-      <div className="profile-content">
+      {/* <NavBar /> */}
         <h1>Profile</h1>
         <div className='profile-details'>
           <div className='profile-image'>
+            <div className='avatar-wrapper'>
             <img
-              src={preview || user.profilePic || UserImage}
+              src={preview || user.profilepic || UserImage}
               alt="Profile"
-              width={150}
-              height={150}
-              style={{ borderRadius: "50%", objectFit: "cover" }}
+              className='avatar-image'
             />
             {/* <input type="file" accept="image/*" onChange={handleImageChange} /> */}
             <input
@@ -69,10 +67,11 @@ function Profile() {
               // className="buttons"
               style={{ display: "none" }}
             />
-            <label htmlFor="imageUpload" className="profile-input">
-              Upload Image
+            <label htmlFor="imageUpload" className="camera-overlay">
+              <FaCamera/>
             </label>
-            {image && <button onClick={handleUpload} className='buttons'>Update Profile Picture</button>}
+            </div>
+            {image && <button onClick={handleUpload} className='buttons'>{loading ? `Loading...` : `Update Profile Picture`}</button>}
           </div>
           <div>
             <p><strong>Full Name:</strong> {user.fullname}</p>
@@ -82,7 +81,6 @@ function Profile() {
         </div>
       </div>
 
-    </div>
   )
 }
 

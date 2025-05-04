@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import userRoutes from "./routes/userRoutes.js";
-import messageRoutes from "./routes/messageRoutes.js";
-import { connectdb } from "./lib/db.js";
+import userRoutes from "./src/routes/userRoutes.js";
+import messageRoutes from "./src/routes/messageRoutes.js";
+import { connectdb } from "./src/lib/db.js";
 import http from "http";
 import { Server } from "socket.io";
 
@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
   console.log("A user connected");
 
   socket.on("send_message", (message) => {
-    console.log("Received message:", message);
+    // console.log("Received message:", message);
     io.emit("receive_message", message); // broadcast to all
   });
 

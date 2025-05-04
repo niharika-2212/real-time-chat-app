@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import "./Signup.css";
 import { auth } from "../../firebaseConfig.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext.jsx";
+import axios from "axios";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fullname, setFullname] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -16,37 +17,34 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      // console.log("Signup successful:", userCredential.user);
+  
       const user = userCredential.user;
       const userData = {
         uid: user.uid,
         fullname: fullname,
         email: user.email,
       };
-      const response = await fetch("http://localhost:5000/api/user/signup", {
-        // Replace with your backend API endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to signup");
-      }
-      setUser(userData);
+  
+      const response = await axios.post("http://localhost:5000/api/user/signup", userData);
+      console.log("User data saved to MongoDB:", response.data.user);
+      setUser(response.data.user);
+
       console.log("Signup successful. User data saved to MongoDB.");
       navigate("/");
     } catch (error) {
-      console.error("Signup error:", error.message);
-      setError(error.message);
+      console.error("Signup error:", error.response?.data?.message || error.message);
+      setError(error.response?.data?.message || "Failed to signup");
     }
   };
   return (
@@ -69,11 +67,11 @@ function Signup() {
             />
           </div>
           <div className="input-container">
-            <label className="login-label">Enter your Password</label>
+            <label className="login-label">Enter your username</label>
             <input
               className="login-input"
               type="text"
-              placeholder="Full Name"
+              placeholder="Username"
               onChange={(e) => setFullname(e.target.value)}
               value={fullname}
               required
@@ -87,6 +85,17 @@ function Signup() {
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              required
+            />
+          </div>
+          <div className="input-container">
+            <label className="login-label">Confirm Password</label>
+            <input
+              className="login-input"
+              type="password"
+              placeholder="Confirm Password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
               required
             />
           </div>

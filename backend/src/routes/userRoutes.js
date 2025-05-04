@@ -12,6 +12,7 @@ router.post("/signup",async (req, res) => {
   let user = await User.findOne({uid});
   // if no user exists then create a new user
   if(!user){
+    
     user = new User({
       uid,
       fullname,

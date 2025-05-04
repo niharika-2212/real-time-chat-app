@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./component.css";
 import { useUser } from "../context/UserContext.jsx";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -7,7 +6,7 @@ import uploadImageToCloudinary from "./cloudinary.jsx";
 import { MdFileUpload } from "react-icons/md";
 import Messages from "./Messages.jsx";
 import socket from "../Socket.js"; // Import the socket instance
-
+import userImage from "../assets/user.png";
 function ChatWindow({ selectedUser }) {
   const { user } = useUser();
   const [messages, setMessages] = useState([]);
@@ -54,7 +53,7 @@ function ChatWindow({ selectedUser }) {
             theme: "colored",
           });
         } else {
-          toast.info("📩 New message received! ", {
+          toast.info(`📩 New message received! `, {
             position: "bottom-left",
             autoClose: 2500,
             theme: "colored",
@@ -113,7 +112,10 @@ function ChatWindow({ selectedUser }) {
 
   return (
     <div className="chat-window">
-      <div className="sidebar-heading">{selectedUser.fullname}</div>
+      <div className="chat-heading">
+        <img src={user.profilepic || userImage}  alt="user" className="avatar-image-s" />
+        <div>{selectedUser.fullname}</div>
+        </div>
       <div className="message-container">
         {messages.map((msg) => {
           return (

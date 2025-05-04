@@ -7,6 +7,8 @@ function Messages({msg, selectedUser}) {
       style={{
         alignSelf:
           selectedUser ? "flex-end" : "flex-start",
+        textAlign:
+          selectedUser ? "right" : "left",
       }}
     >
       {msg.text && <div>{msg.text}</div>}
@@ -14,6 +16,7 @@ function Messages({msg, selectedUser}) {
         <img
           src={msg.image}
           alt="sent"
+          className="message-image"
         />
       )}
     </div>

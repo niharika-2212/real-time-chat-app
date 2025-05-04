@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
 import axios from "axios";
-import "./component.css";
 import userImage from "../assets/user.png"
+import NavBar from "./NavBar.jsx";
 
-function Sidebar({ onSelectUser }) {
+function Sidebar({ onSelectUser, profileClick }) {
   const { user } = useUser(); // logged in user info
   const [users, setUsers] = React.useState([]); // all users info
   const [loading, setLoading] = useState(true); // loading state
@@ -20,7 +20,7 @@ function Sidebar({ onSelectUser }) {
         // save the data
         const data = response.data;
         setUsers(data.users);
-        console.log("Fetched users:", data.users);
+        // console.log("Fetched users:", data.users);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching users:", error.message);
@@ -30,12 +30,12 @@ function Sidebar({ onSelectUser }) {
 
     fetchUsers();
   }, [user]);
+  
   if (loading) {
     return <div>Loading users...</div>;
   }
   return (
     <div className="sidebar-container">
-      <div className="sidebar-heading">Users</div>
       {users.length == 0 ? (
         <div>no users available</div>
       ) : (
@@ -45,7 +45,7 @@ function Sidebar({ onSelectUser }) {
               className="user"
               style={{
                 backgroundColor:
-                  user.uid === selectedUid ? "#FAFAFA" : "#FFFFFF",
+                  user.uid === selectedUid ? "#414346" : null,
               }}
               onClick={() => {
                 setSelectedUid(user.uid);
@@ -53,7 +53,7 @@ function Sidebar({ onSelectUser }) {
               }}
               key={user.uid}
             >
-              <img src={user.profilepic || userImage}  alt="user" className="avatar-image" />
+              <img src={user.profilepic || userImage}  alt="user" className="avatar-image-s" />
               {user.fullname}
             </div>
             
