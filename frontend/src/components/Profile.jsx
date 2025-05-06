@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useUser } from '../../context/UserContext.jsx';
-import UserImage from "../../assets/user.png"
-import uploadImageToCloudinary from "../../components/cloudinary.jsx";
+import { useUser } from "../context/UserContext.jsx";
+import UserImage from "../assets/user.png";
+import uploadImageToCloudinary from "./cloudinary.jsx";
 import axios from 'axios';
 import { FaCamera } from "react-icons/fa";
 
@@ -49,7 +49,7 @@ function Profile() {
   return (
     <div className="profile-container">
       {/* <NavBar /> */}
-        <h1>Profile</h1>
+        <div className='profile-heading'>Profile</div>
         <div className='profile-details'>
           <div className='profile-image'>
             <div className='avatar-wrapper'>
@@ -74,9 +74,9 @@ function Profile() {
             {image && <button onClick={handleUpload} className='buttons'>{loading ? `Loading...` : `Update Profile Picture`}</button>}
           </div>
           <div>
-            <p><strong>Full Name:</strong> {user.fullname}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Created At:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+            <p><strong>Full Name:</strong> <span style={{color:"#A0A0B0"}}>{user.fullname}</span></p>
+            <p ><strong>Email:</strong> <span style={{color:"#A0A0B0"}}>{user.email}</span></p>
+            <p><strong>Created At:</strong> <span style={{color:"#A0A0B0"}}>{new Date(user.createdAt).toLocaleDateString()}</span></p>
           </div>
         </div>
       </div>

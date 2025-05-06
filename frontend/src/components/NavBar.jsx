@@ -5,9 +5,10 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig.js";
 import { CgProfile } from "react-icons/cg";
 import { FaPowerOff } from "react-icons/fa6";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 
-function NavBar(props) {
+function NavBar({profileClick, setSidebarOpen}) {
   const { setUser } = useUser();
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -24,8 +25,11 @@ function NavBar(props) {
     <div className="navbar-container">
       <div className="navbar-heading" onClick={() => { navigate("/") }}>ChatterBox</div>
       <div className="right-nav">
-        <div onClick={() => { props.profileClick(true) }}><CgProfile className="profile-icon" /></div>
-        <FaPowerOff onClick={handleLogout} className="logout-button"/>
+        <div className="hamburger" onClick={() => setSidebarOpen(true)}>
+          <GiHamburgerMenu className="hamburger-icon"/>
+        </div>
+        <div onClick={() => { profileClick(true) }}><CgProfile className="profile-icon" /></div>
+        <FaPowerOff onClick={handleLogout} className="logout-button" />
       </div>
     </div>
   )

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
 import axios from "axios";
 import userImage from "../assets/user.png"
-import NavBar from "./NavBar.jsx";
+// import NavBar from "./NavBar.jsx";
 
-function Sidebar({ onSelectUser, profileClick }) {
+function Sidebar({ onSelectUser, isOpen, closeSidebar }) {
   const { user } = useUser(); // logged in user info
   const [users, setUsers] = React.useState([]); // all users info
   const [loading, setLoading] = useState(true); // loading state
@@ -30,12 +30,13 @@ function Sidebar({ onSelectUser, profileClick }) {
 
     fetchUsers();
   }, [user]);
-  
+
   if (loading) {
     return <div>Loading users...</div>;
   }
   return (
-    <div className="sidebar-container">
+    <>
+    <div className={`sidebar-container ${isOpen ? "open" : ""}`}>
       {users.length == 0 ? (
         <div>no users available</div>
       ) : (
@@ -45,22 +46,23 @@ function Sidebar({ onSelectUser, profileClick }) {
               className="user"
               style={{
                 backgroundColor:
-                  user.uid === selectedUid ? "#414346" : null,
+                  user.uid === selectedUid ? "#3C3C50" : null,
               }}
               onClick={() => {
                 setSelectedUid(user.uid);
                 onSelectUser(user);
+                closeSidebar();
               }}
               key={user.uid}
             >
-              <img src={user.profilepic || userImage}  alt="user" className="avatar-image-s" />
+              <img src={user.profilepic || userImage} alt="user" className="avatar-image-s" />
               {user.fullname}
             </div>
-            
-          );
-        })
+          )})
       )}
     </div>
+    {isOpen && <div className="overlay" onClick={closeSidebar}></div>}
+    </>
   );
 }
 

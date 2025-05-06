@@ -151,6 +151,7 @@ function ChatWindow({ selectedUser }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message..."
+          required
         />
         <button type="submit" className="buttons">
           Send
