@@ -13,9 +13,15 @@ function Sidebar({ onSelectUser, isOpen, closeSidebar }) {
   useEffect(() => {
     const fetchUsers = async () => {
       if (!user) return; // if not logged in, don't fetch
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/user/allusers/${user.uid}`
+          `http://localhost:5000/api/user/allusers/${user.uid}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         // save the data
         const data = response.data;
@@ -36,32 +42,33 @@ function Sidebar({ onSelectUser, isOpen, closeSidebar }) {
   }
   return (
     <>
-    <div className={`sidebar-container ${isOpen ? "open" : ""}`}>
-      {users.length == 0 ? (
-        <div>no users available</div>
-      ) : (
-        users.map((user) => {
-          return (
-            <div
-              className="user"
-              style={{
-                backgroundColor:
-                  user.uid === selectedUid ? "#3C3C50" : null,
-              }}
-              onClick={() => {
-                setSelectedUid(user.uid);
-                onSelectUser(user);
-                closeSidebar();
-              }}
-              key={user.uid}
-            >
-              <img src={user.profilepic || userImage} alt="user" className="avatar-image-s" />
-              {user.fullname}
-            </div>
-          )})
-      )}
-    </div>
-    {isOpen && <div className="overlay" onClick={closeSidebar}></div>}
+      <div className={`sidebar-container ${isOpen ? "open" : ""}`}>
+        {users.length == 0 ? (
+          <div>no users available</div>
+        ) : (
+          users.map((user) => {
+            return (
+              <div
+                className="user"
+                style={{
+                  backgroundColor:
+                    user.uid === selectedUid ? "#3C3C50" : null,
+                }}
+                onClick={() => {
+                  setSelectedUid(user.uid);
+                  onSelectUser(user);
+                  closeSidebar();
+                }}
+                key={user.uid}
+              >
+                <img src={user.profilepic || userImage} alt="user" className="avatar-image-s" />
+                {user.fullname}
+              </div>
+            )
+          })
+        )}
+      </div>
+      {isOpen && <div className="overlay" onClick={closeSidebar}></div>}
     </>
   );
 }

@@ -22,9 +22,15 @@ function Login() {
       );
 
       const user = userCredential.user;
-
+      const idToken = await user.getIdToken();
+      localStorage.setItem("token", idToken);
       const response = await axios.get(
-        `http://localhost:5000/api/user/${user.uid}`
+        `http://localhost:5000/api/user/${user.uid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        }
       );
 
       // Set user in context
@@ -48,26 +54,26 @@ function Login() {
         <form onSubmit={handleSubmit} className="form-container">
           <div className="login-heading">Login</div>
           <div className="input-container">
-          <label className="login-label">Enter your Email</label>
-          <input
-            className="login-input"
-            type="email"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            required
-          />
+            <label className="login-label">Enter your Email</label>
+            <input
+              className="login-input"
+              type="email"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              required
+            />
           </div>
           <div className="input-container">
-          <label className="login-label">Enter your Password</label>
-          <input
-            className="login-input"
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            required
-          />
+            <label className="login-label">Enter your Password</label>
+            <input
+              className="login-input"
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
+            />
           </div>
           {error && <p style={{ color: "#F87171" }}>{error}</p>}
           <button type="submit" className="buttons">Login</button>

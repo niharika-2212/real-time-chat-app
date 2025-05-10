@@ -24,7 +24,7 @@ router.post("/signup",async (req, res) => {
 });
 
 // get user details by uid
-router.get("/:uid",async (req,res)=>{
+router.get("/:uid",verifyToken,async (req,res)=>{
     const {uid}=req.params;
     // check if user already exists
     try {
@@ -37,7 +37,7 @@ router.get("/:uid",async (req,res)=>{
 });
 
 // get all users except current user
-router.get("/allusers/:currentUserId",async (req, res) => {
+router.get("/allusers/:currentUserId",verifyToken,async (req, res) => {
   const { currentUserId } = req.params;
   try {
     const users = await User.find({ uid: { $ne: currentUserId } });
@@ -47,8 +47,8 @@ router.get("/allusers/:currentUserId",async (req, res) => {
   }
 });
 
-
-router.put("/update-profile-pic/:uid",async (req,res)=>{
+// change profile pic for user
+router.put("/update-profile-pic/:uid",verifyToken,async (req,res)=>{
   const {image} = req.body;
   const {uid} = req.params;
   if (!image) {

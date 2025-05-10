@@ -30,12 +30,14 @@ function Signup() {
       );
   
       const user = userCredential.user;
+      
       const userData = {
         uid: user.uid,
         fullname: fullname,
         email: user.email,
       };
-  
+      const idToken = await user.getIdToken();
+      localStorage.setItem("token", idToken);
       const response = await axios.post("http://localhost:5000/api/user/signup", userData);
       console.log("User data saved to MongoDB:", response.data.user);
       setUser(response.data.user);

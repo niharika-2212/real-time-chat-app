@@ -23,8 +23,14 @@ function ChatWindow({ selectedUser }) {
       if (!selectedUser || !user) return;
       try {
         // console.log("Fetching messages for:", user._id, selectedUser._id);
+        const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:5000/api/message/${user._id}/${selectedUser._id}`
+          `http://localhost:5000/api/message/${user._id}/${selectedUser._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setMessages(response.data.messages);
       } catch (error) {
@@ -87,9 +93,15 @@ function ChatWindow({ selectedUser }) {
     };
     try {
       // socket.emit("send_message", messageData);
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://localhost:5000/api/message/send",
-        messageData
+        messageData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       socket.emit("send_message", response.data.message);
       setNewMessage("");
@@ -113,9 +125,9 @@ function ChatWindow({ selectedUser }) {
   return (
     <div className="chat-window">
       <div className="chat-heading">
-        <img src={user.profilepic || userImage}  alt="user" className="avatar-image-s" />
+        <img src={user.profilepic || userImage} alt="user" className="avatar-image-s" />
         <div>{selectedUser.fullname}</div>
-        </div>
+      </div>
       <div className="message-container">
         {messages.map((msg) => {
           return (
