@@ -18,7 +18,6 @@ function Home() {
 
   return (
     <div className="home">
-      {/* <NavBar/> */}
       <NavBar profileClick={handleProfileClick} setSidebarOpen={setSidebarOpen}/>
 
         <div className="home-main">

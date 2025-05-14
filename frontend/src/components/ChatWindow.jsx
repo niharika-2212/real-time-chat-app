@@ -22,7 +22,6 @@ function ChatWindow({ selectedUser }) {
     const fetchMessages = async () => {
       if (!selectedUser || !user) return;
       try {
-        // console.log("Fetching messages for:", user._id, selectedUser._id);
         const token = localStorage.getItem("token");
         const response = await axios.get(
           `http://localhost:5000/api/message/${user._id}/${selectedUser._id}`,
@@ -81,7 +80,6 @@ function ChatWindow({ selectedUser }) {
     let imageUrl = null;
     if (image) {
       imageUrl = await uploadImageToCloudinary(image);
-      // console.log(imageUrl);
       if (!imageUrl) return; // prevent sending if upload failed
     }
 

@@ -1,5 +1,3 @@
-// import dotenv from "dotenv";
-// dotenv.config();
 import axios from "axios";
 const uploadImageToCloudinary = async (imageFile) => {
   const data = new FormData();

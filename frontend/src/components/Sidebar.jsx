@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext.jsx";
 import axios from "axios";
 import userImage from "../assets/user.png"
-// import NavBar from "./NavBar.jsx";
 
 function Sidebar({ onSelectUser, isOpen, closeSidebar }) {
   const { user } = useUser(); // logged in user info
@@ -26,7 +25,6 @@ function Sidebar({ onSelectUser, isOpen, closeSidebar }) {
         // save the data
         const data = response.data;
         setUsers(data.users);
-        // console.log("Fetched users:", data.users);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching users:", error.message);
