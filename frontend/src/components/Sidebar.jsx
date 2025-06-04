@@ -50,7 +50,7 @@ function Sidebar({ onSelectUser, isOpen, closeSidebar }) {
                 className="user"
                 style={{
                   backgroundColor:
-                    user.uid === selectedUid ? "#3C3C50" : null,
+                    user.uid === selectedUid ? "#EDEDED" : null,
                 }}
                 onClick={() => {
                   setSelectedUid(user.uid);

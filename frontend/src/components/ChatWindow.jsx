@@ -13,7 +13,7 @@ function ChatWindow({ selectedUser }) {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
   const [image, setImage] = useState(null);
-
+  const [isSending, setIsSending] = useState(false);
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -75,12 +75,17 @@ function ChatWindow({ selectedUser }) {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() && !image) return; // Prevent sending empty messages
+    if (!newMessage.trim() && !image) return;
+
+    setIsSending(true); // start loading
 
     let imageUrl = null;
     if (image) {
       imageUrl = await uploadImageToCloudinary(image);
-      if (!imageUrl) return; // prevent sending if upload failed
+      if (!imageUrl) {
+        setIsSending(false); // stop loading on failure
+        return;
+      }
     }
 
     const messageData = {
@@ -89,8 +94,8 @@ function ChatWindow({ selectedUser }) {
       text: newMessage,
       image: imageUrl,
     };
+
     try {
-      // socket.emit("send_message", messageData);
       const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://localhost:5000/api/message/send",
@@ -103,12 +108,11 @@ function ChatWindow({ selectedUser }) {
       );
       socket.emit("send_message", response.data.message);
       setNewMessage("");
-      setImage(null); // Reset image after sending
+      setImage(null);
     } catch (error) {
-      console.error(
-        "Error sending message:",
-        error.response?.data?.message || error.message
-      );
+      console.error("Error sending message:", error.response?.data?.message || error.message);
+    } finally {
+      setIsSending(false); // stop loading regardless of success or failure
     }
   };
 
@@ -127,11 +131,13 @@ function ChatWindow({ selectedUser }) {
         <div>{selectedUser.fullname}</div>
       </div>
       <div className="message-container">
-        {messages.map((msg) => {
-          return (
+        {messages.length === 0 ? (
+          <div className="no-messages">No messages to display</div>
+        ) : (
+          messages.map((msg) => (
             <Messages key={msg._id} msg={msg} selectedUser={msg.senderId === user._id} />
-          );
-        })}
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
       {image && (
@@ -163,8 +169,8 @@ function ChatWindow({ selectedUser }) {
           placeholder="Type a message..."
           required
         />
-        <button type="submit" className="buttons">
-          Send
+        <button type="submit" className={`buttons ${isSending ? "disabled" : ""}`} disabled={isSending}>
+          {isSending ? "Sending..." : "Send"}
         </button>
       </form>
     </div>

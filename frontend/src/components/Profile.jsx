@@ -74,7 +74,7 @@ function Profile() {
               style={{ display: "none" }}
             />
             <label htmlFor="imageUpload" className="camera-overlay">
-              <FaCamera />
+              <FaCamera className='camera-image'/>
             </label>
           </div>
           {image && <button onClick={handleUpload} className='buttons'>{loading ? `Loading...` : `Update Profile Picture`}</button>}

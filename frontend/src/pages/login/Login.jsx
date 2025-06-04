@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext.jsx";
 import axios from "axios";
-
+import loginImage from "../../assets/login.png";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,9 +50,9 @@ function Login() {
       <div className="login-header">
         <div className="login-name">ChatterBox</div>
       </div>
-      <div>
+      <div className="login-main">
         <form onSubmit={handleSubmit} className="form-container">
-          <div className="login-heading">Login</div>
+          <div className="login-heading">Welcome Back!</div>
           <div className="input-container">
             <label className="login-label">Enter your Email</label>
             <input
@@ -81,6 +81,7 @@ function Login() {
             Don't have an account? <a href="/signup" className="link">Signup</a>
           </div>
         </form>
+        <img src={loginImage} alt="chat-image" className="login-image" />
       </div>
     </div>
   );

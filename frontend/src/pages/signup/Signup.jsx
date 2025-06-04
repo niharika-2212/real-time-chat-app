@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext.jsx";
 import axios from "axios";
+import loginImage from "../../assets/login.png";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -21,16 +22,16 @@ function Signup() {
       setError("Passwords do not match");
       return;
     }
-  
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-  
+
       const user = userCredential.user;
-      
+
       const userData = {
         uid: user.uid,
         fullname: fullname,
@@ -54,9 +55,9 @@ function Signup() {
       <div className="login-header">
         <div className="login-name">ChatterBox</div>
       </div>
-      <div>
+      <div className="login-main">
         <form onSubmit={handleSubmit} className="form-container">
-          <div className="login-heading">Signup</div>
+          <div className="login-heading">Let's Get You Started!</div>
           <div className="input-container">
             <label className="login-label">Enter your Email</label>
             <input
@@ -107,6 +108,7 @@ function Signup() {
             Already have an account? <a href="/login" className="link">Login</a>
           </div>
         </form>
+        <img src={loginImage} alt="chat-image" className="login-image" />
       </div>
     </div>
   );
