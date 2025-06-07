@@ -33,22 +33,39 @@ A full-stack real-time chat application where users can:
 - dotenv
 
 ## Setup instructions
-1. Clone the repository
+### Backend
+1. Clone the repository and navigate t the backend
 ```
 git clone https://github.com/niharika-2212/real-time-chat-app.git
-```
-2. Setup the backend
-```
 cd backend
 npm install
+```
+2. Setup environment variables `env`
+```
+PORT = <port>
+MONGODB_URI=<your-mongodb-URI>
+```
+3. Get firebase admin key file and paste in `lib` folder as firebaseAdmin.json
+4. Start the server
+```
 npm run dev
 ```
-3. Setup the frontend
+### Frontend
+1. Navigate to frontend and install dependencies
 ```
 cd frontend
 npm install
+```
+2. Setup environment variables env for cloudinary
+```
+VITE_UPLOAD_PRESET=<your-cloud-preset>
+VITE_CLOUD_NAME=<your-cloud-name>
+```
+3. Get firebase config details, create a file in `src` as firebaseConfig.js and paste content there
+4. Start the server
+```
 npm run dev
 ```
-
+Visit your localhost as shown in your terminal: http://localhost:5173/
 ## Author
 Niharika Manhar
